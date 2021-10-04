@@ -50,7 +50,7 @@ do
 
 ## Check name validation
 
-COUNT=$(echo ${name} |  egrep -c -v "[^a-zA-Z]+")
+COUNT=$(echo ${NAME} |  egrep -c -v "[^a-zA-Z]+")
     if [ ${COUNT} -ne 1 ]
     then
         echo "customer name is not a valid "
