@@ -8,7 +8,7 @@ import itertools
 def most_pop_words():
     words = []
     most_used_words = {}
-
+    # very nice file handling XD ~kataya
     with open(argv[1], 'r') as data:
 
         for line in data:
@@ -60,7 +60,12 @@ phrase = "Arafa Mohamed Ismael"
 def reverse_phrases(given_phrase):
     words = given_phrase.split(" ")
     words = list(reversed(words))
+    # nice, i can trust you with array and strings ~kataya
     print(" ".join(words))
+    
+    # you can also do it like this
+def reverse_phrases_kataya(phrase):
+    retrun " ".join(phrase.split()[::-1])
 
 
 # reverse_phrases(phrase)
