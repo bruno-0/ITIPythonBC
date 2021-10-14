@@ -1,0 +1,181 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML5 - Part02</title>
+    <script>
+      let db = openDatabase(
+        "onlinestore",
+        "1.0",
+        "ponline store system v1",
+        24 * 1024 * 1024
+      );
+
+      db.transaction(function (tx) {
+        tx.executeSql(
+          "create table if not exists items (id int ,name txt , amount int)",
+          null,
+          function (tx, result) {},
+          function (tx, error) {
+            console.log(error);
+          }
+        );
+      });
+
+      let showItems = () => {
+        db.transaction(function (tx) {
+          tx.executeSql("select * from items ", null, function (tx, result) {
+            let htmlCode = "";
+            for (let i = 0; i < result.rows.length; i++) {
+              let currentRecord = result.rows[i];
+              htmlCode += `
+                            <tr>
+                                <td>
+                                    ${currentRecord.id}
+                                </td>
+                                <td>
+                                    ${currentRecord.name}
+                                </td>
+                                <td>
+                                    ${currentRecord.amount}
+                                </td>
+                            </tr>
+                            `;
+            }
+            itemsTableBody.innerHTML = htmlCode;
+          });
+        });
+      };
+      showItems();
+
+      let add = () => {
+        db.transaction(function (tx) {
+          tx.executeSql(
+            "insert into items (id,name,amount) values (?,?,?)",
+            [itemId.value, itemName.value, itemAmount.value],
+            function (tx, result) {
+              alert("Item added successfully");
+              showItems();
+            }
+          );
+        });
+      };
+    </script>
+    <style>
+      body {
+        background-color: #fff;
+        color: #212529;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        margin: 0;
+        text-align: left;
+      }
+
+      .container {
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 15px;
+        padding-right: 15px;
+        text-align: center;
+        width: 90%;
+      }
+
+      .jumbotron {
+        background-color: #477bff;
+        color: #fff;
+        margin-bottom: 2rem;
+        padding: 2rem 1rem;
+        text-align: center;
+      }
+
+      .section {
+        padding-bottom: 1rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        padding-top: 0.5rem;
+      }
+
+      .section:hover {
+        background-color: #f5f5f5;
+        transition: color 2s ease-in-out, background-color 0.15s ease-in-out;
+      }
+
+      h1 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 48px;
+      }
+
+      button,
+      input[type="submit"] {
+        background-color: #d9edff;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+        font-size: 0.95rem;
+        font-weight: 400;
+        line-height: 1.5;
+        padding: 0.375rem 0.75rem;
+        text-align: center;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+          border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        vertical-align: middle;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        line-height: 1.8;
+        width: 25%;
+      }
+
+      input[type="text"]:hover,
+      input[type="number"]:hover {
+        background-color: #f5f5f5;
+        transition: color 2s ease-in-out, background-color 0.15s ease-in-out;
+      }
+
+      table {
+        background-color: transparent;
+        margin-bottom: 1rem;
+        width: 100%;
+      }
+
+      table th,
+      table td {
+        padding: 0.75rem;
+        vertical-align: middle;
+      }
+
+      tbody tr:nth-of-type(odd) {
+        background-color: rgb(179, 208, 255, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="jumbotron">
+      <h1>Online Store</h1>
+    </div>
+
+    <div class="container">
+      <div class="section">
+        <h2>Add Item</h2>
+        <input type="number" placeholder="id" id="itemId" />
+        <input type="text" placeholder="name" id="itemName" />
+        <input type="number" placeholder="amount" id="itemAmount" />
+
+        <button id="addBtn" onclick="add()">Add</button>
+      </div>
+      <div id="itemsTable">
+        <table>
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Name</th>
+              <th>amount</th>
+            </tr>
+          </thead>
+          <tbody id="itemsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
